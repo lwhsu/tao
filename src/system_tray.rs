@@ -36,7 +36,7 @@ use crate::{
 /// Object that allows you to build SystemTray instance.
 pub struct SystemTrayBuilder(pub(crate) SystemTrayBuilderPlatform);
 
-#[cfg(target_os = "linux")]
+#[cfg(any(target_os = "linux", target_os = "freebsd"))]
 use std::path::PathBuf;
 
 impl SystemTrayBuilder {
@@ -46,7 +46,7 @@ impl SystemTrayBuilder {
   ///
   /// - **macOS / Windows:**: receive icon as bytes (`Vec<u8>`)
   /// - **Linux:**: receive icon's path (`PathBuf`)
-  #[cfg(not(target_os = "linux"))]
+  #[cfg(not(any(target_os = "linux", target_os = "freebsd")))]
   pub fn new(icon: Vec<u8>, tray_menu: Option<ContextMenu>) -> Self {
     Self(SystemTrayBuilderPlatform::new(
       icon,
@@ -60,7 +60,7 @@ impl SystemTrayBuilder {
   ///
   /// - **macOS / Windows:**: receive icon as bytes (`Vec<u8>`)
   /// - **Linux:**: receive icon's path (`PathBuf`)
-  #[cfg(target_os = "linux")]
+  #[cfg(any(target_os = "linux", target_os = "freebsd"))]
   pub fn new(icon: PathBuf, tray_menu: Option<ContextMenu>) -> Self {
     Self(SystemTrayBuilderPlatform::new(
       icon,
@@ -89,7 +89,7 @@ impl SystemTray {
   ///
   /// - **macOS / Windows:**: receive icon as bytes (`Vec<u8>`)
   /// - **Linux:**: receive icon's path (`PathBuf`)
-  #[cfg(not(target_os = "linux"))]
+  #[cfg(not(any(target_os = "linux", target_os = "freebsd")))]
   pub fn set_icon(&mut self, icon: Vec<u8>) {
     self.0.set_icon(icon)
   }
@@ -100,7 +100,7 @@ impl SystemTray {
   ///
   /// - **macOS / Windows:**: receive icon as bytes (`Vec<u8>`)
   /// - **Linux:**: receive icon's path (`PathBuf`)
-  #[cfg(target_os = "linux")]
+  #[cfg(any(target_os = "linux", target_os = "freebsd"))]
   pub fn set_icon(&mut self, icon: PathBuf) {
     self.0.set_icon(icon)
   }

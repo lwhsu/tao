@@ -2,18 +2,18 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // System tray is supported and availabled only if feature flag is enabled.
-// Platform: Windows, Linux and macOS.
-#[cfg(any(target_os = "windows", target_os = "linux", target_os = "macos"))]
+// Platform: Windows, Linux, macOS and FreeBSD.
+#[cfg(any(target_os = "windows", target_os = "linux", target_os = "macos", target_os = "freebsd"))]
 #[cfg(feature = "tray")]
 fn main() {
   use std::collections::HashMap;
-  #[cfg(target_os = "linux")]
+  #[cfg(any(target_os = "linux", target_os = "freebsd"))]
   use std::path::Path;
-  #[cfg(target_os = "linux")]
+  #[cfg(any(target_os = "linux", target_os = "freebsd"))]
   use tao::menu::{ContextMenu, MenuItemAttributes};
   #[cfg(target_os = "macos")]
   use tao::platform::macos::{ActivationPolicy, EventLoopExtMacOS};
-  #[cfg(target_os = "linux")]
+  #[cfg(any(target_os = "linux", target_os = "freebsd"))]
   use tao::platform::unix::WindowBuilderExtUnix;
   #[cfg(target_os = "windows")]
   use tao::platform::windows::WindowBuilderExtWindows;
@@ -65,14 +65,14 @@ fn main() {
   #[cfg(target_os = "macos")]
   let icon = include_bytes!("icon.png").to_vec();
   // Linux require Pathbuf to PNG file
-  #[cfg(target_os = "linux")]
+  #[cfg(any(target_os = "linux", target_os = "freebsd"))]
   let icon = Path::new(env!("CARGO_MANIFEST_DIR")).join("examples/icon.png");
 
   // linux require a menu so let's add only a open button
-  #[cfg(target_os = "linux")]
+  #[cfg(any(target_os = "linux", target_os = "freebsd"))]
   let open_menu_id = MenuId::new("open_menu");
   let quit_menu_id = MenuId::new("quit_menu");
-  #[cfg(target_os = "linux")]
+  #[cfg(any(target_os = "linux", target_os = "freebsd"))]
   {
     let mut menu = ContextMenu::new();
     menu.add_item(MenuItemAttributes::new("Open").with_id(open_menu_id));
@@ -103,7 +103,7 @@ fn main() {
       }
       // if we got a menu event from our `open_menu_id` open a new window..
       // (used on linux)
-      #[cfg(target_os = "linux")]
+      #[cfg(any(target_os = "linux", target_os = "freebsd"))]
       Event::MenuEvent { menu_id, .. } if menu_id == open_menu_id => {
         let window = WindowBuilder::new()
           .with_skip_taskbar(true)
@@ -136,7 +136,7 @@ fn main() {
               .with_resizable(false);
 
             // skip taskbar on windows & linux
-            #[cfg(any(target_os = "linux", target_os = "windows"))]
+            #[cfg(any(target_os = "linux", target_os = "windows", target_os = "freebsd"))]
             {
               window_builder = window_builder.with_skip_taskbar(true);
             }
@@ -157,13 +157,13 @@ fn main() {
 }
 
 // System tray isn't supported on other's platforms.
-#[cfg(not(any(target_os = "windows", target_os = "linux", target_os = "macos")))]
+#[cfg(not(any(target_os = "windows", target_os = "linux", target_os = "macos", target_os = "freebsd")))]
 fn main() {
   println!("This platform doesn't support system_tray.");
 }
 
 // Tray feature flag disabled but can be available.
-#[cfg(any(target_os = "windows", target_os = "linux", target_os = "macos"))]
+#[cfg(any(target_os = "windows", target_os = "linux", target_os = "macos", target_os = "freebsd"))]
 #[cfg(not(feature = "tray"))]
 fn main() {
   println!("This platform doesn't have the `tray` feature enabled.");

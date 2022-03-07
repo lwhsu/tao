@@ -61,7 +61,7 @@ sudo pacman -S gtk3 libappindicator-gtk3
 sudo apt install libgtk-3-dev libappindicator3-dev
 ```
 
-#### MacOS
+### MacOS
 
 To ensure compatibility with older MacOS systems, tao links to
 CGDisplayCreateUUIDFromDisplayID through the CoreGraphics framework.
@@ -69,6 +69,14 @@ However, under certain setups this function is only available to be linked
 through the newer ColorSync framework. So, tao provides the
 `TAO_LINK_COLORSYNC` environment variable which can be set to `1` or `true`
 while compiling to enable linking via ColorSync.
+
+### FreeBSD
+
+Gtk and its related libraries are used to build the support of FreeBSD. Be sure to install following packages before building:
+
+```sh
+sudo pkg install gtk3 libappindicator
+```
 
 ### Acknowledgement
 

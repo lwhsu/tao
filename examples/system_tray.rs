@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 // System tray is supported and availabled only if `tray` feature is enabled.
-// Platform: Windows, Linux and macOS.
-#[cfg(any(target_os = "windows", target_os = "linux", target_os = "macos"))]
+// Platform: Windows, Linux, macOS and FreeBSD.
+#[cfg(any(target_os = "windows", target_os = "linux", target_os = "macos", target_os = "freebsd"))]
 #[cfg(feature = "tray")]
 fn main() {
   use std::collections::HashMap;
-  #[cfg(target_os = "linux")]
+  #[cfg(any(target_os = "linux", target_os = "freebsd"))]
   use std::path::Path;
   #[cfg(target_os = "macos")]
   use tao::platform::macos::{CustomMenuItemExtMacOS, NativeImage, SystemTrayBuilderExtMacOS};
@@ -55,7 +55,7 @@ fn main() {
   #[cfg(target_os = "macos")]
   let icon = include_bytes!("icon.png").to_vec();
   // Linux require Pathbuf to PNG file
-  #[cfg(target_os = "linux")]
+  #[cfg(any(target_os = "linux", target_os = "freebsd"))]
   let icon = Path::new(env!("CARGO_MANIFEST_DIR")).join("examples/icon.png");
 
   // Windows require Vec<u8> ICO file
@@ -65,7 +65,7 @@ fn main() {
   #[cfg(target_os = "macos")]
   let new_icon = include_bytes!("icon_dark.png").to_vec();
   // Linux require Pathbuf to PNG file
-  #[cfg(target_os = "linux")]
+  #[cfg(any(target_os = "linux", target_os = "freebsd"))]
   let new_icon = Path::new(env!("CARGO_MANIFEST_DIR")).join("examples/icon_dark.png");
 
   // Menu is shown with left click on macOS and right click on Windows.
@@ -174,13 +174,13 @@ fn main() {
 }
 
 // System tray isn't supported on other's platforms.
-#[cfg(not(any(target_os = "windows", target_os = "linux", target_os = "macos")))]
+#[cfg(not(any(target_os = "windows", target_os = "linux", target_os = "macos", target_os = "freebsd")))]
 fn main() {
   println!("This platform doesn't support system_tray.");
 }
 
 // Tray feature flag disabled but can be available.
-#[cfg(any(target_os = "windows", target_os = "linux", target_os = "macos"))]
+#[cfg(any(target_os = "windows", target_os = "linux", target_os = "macos", target_os = "freebsd"))]
 #[cfg(not(feature = "tray"))]
 fn main() {
   println!("This platform doesn't have the `tray` feature enabled.");
