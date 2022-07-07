@@ -1,5 +1,10 @@
 # Changelog
 
+## \[0.12.2]
+
+- Fixed set_inner_size is reset when resizable is set to false.
+  - [17203d08](https://github.com/tauri-apps/tao/commit/17203d08a4ee49c8fa8decb24bcf76fe4c264ca7) fix: fixed inner_size even if resizable is set to false ([#461](https://github.com/tauri-apps/tao/pull/461)) on 2022-07-05
+
 ## \[0.12.1]
 
 - Revert #427 due to random crash caused by it.
